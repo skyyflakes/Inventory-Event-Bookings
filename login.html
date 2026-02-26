@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Janet's Quality Catering</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            /* DARK MODE (default) */
+            --bg-body: #0a0b10;
+            --card-color: #1a1d29;
+            --accent-pink: #ff2e63;
+            --text-main: #ffffff;
+            --text-muted: #8e92a4;
+            --border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* LIGHT MODE */
+        [data-theme="light"] {
+            --bg-body: #f4f7fe;
+            --card-color: #ffffff;
+            --text-main: #1a1d2f;
+            --text-muted: #64748b;
+            --border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body { 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .login-card { 
+            background: var(--card-color); 
+            padding: 40px; 
+            border-radius: 24px; 
+            width: 100%; 
+            max-width: 420px; 
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        [data-theme="light"] .login-card { box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+
+        /* Theme Switcher */
+        .theme-switcher {
+            background: rgba(128, 128, 128, 0.1); border-radius: 10px;
+            display: flex; justify-content: center; gap: 10px; padding: 5px; margin-bottom: 20px;
+        }
+        .theme-btn { border: none; background: transparent; color: var(--text-muted); padding: 8px 15px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .theme-btn.active { background: var(--accent-pink); color: white; }
+
+        .brand-text {
+            font-weight: 800;
+            font-size: 1.5rem;
+            line-height: 1.1;
+            margin-bottom: 25px;
+            text-align: center;
+            color: var(--text-main);
+        }
+
+        .form-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            background: var(--bg-body);
+            border: 2px solid var(--border-color);
+            color: var(--text-main) !important;
+            padding: 12px;
+            border-radius: 12px;
+            transition: background 0.3s, color 0.3s, border-color 0.3s;
+        }
+        [data-theme="light"] .form-control { background: #ffffff; border-color: #ced4da; }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-control:focus {
+            background: var(--bg-body);
+            border-color: var(--accent-pink);
+            box-shadow: 0 0 0 3px rgba(255, 46, 99, 0.1);
+            outline: none;
+        }
+
+        /* Show Password Toggle Styling */
+        .password-container { position: relative; }
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+            z-index: 10;
+            transition: color 0.3s;
+        }
+
+        .toggle-password:hover {
+            color: var(--accent-pink);
+        }
+
+        /* Captcha Styling */
+        .captcha-box {
+            background: rgba(255, 46, 99, 0.1);
+            border: 2px dashed var(--accent-pink);
+            color: var(--accent-pink);
+            font-weight: 800;
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .btn-magenta { 
+            background: var(--accent-pink); 
+            color: white; 
+            width: 100%; 
+            font-weight: 800; 
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-magenta:hover { background: #e62958; transform: translateY(-2px); color: white; }
+
+        .error-msg {
+            background: rgba(255, 46, 99, 0.1);
+            color: var(--accent-pink);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .success-msg {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-check-input {
+            background-color: var(--bg-body);
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        [data-theme="light"] .form-check-input { background-color: #ffffff; border-color: #ced4da; }
+
+        .form-check-input:checked {
+            background-color: var(--accent-pink);
+            border-color: var(--accent-pink);
+        }
+
+        .form-check-label {
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .terms-link {
+            color: var(--accent-pink);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .terms-link:hover {
+            text-decoration: underline;
+        }
+
+        /* MODAL STYLING */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--card-color);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            animation: slideUp 0.3s ease-out;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        [data-theme="light"] .modal-content { box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-pink);
+        }
+
+        .modal-body {
+            color: var(--text-main);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .modal-body h3 {
+            color: var(--accent-pink);
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .modal-body p {
+            margin-bottom: 12px;
+            color: var(--text-muted);
+        }
+
+        .modal-body ul, .modal-body ol {
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            padding-left: 20px;
+        }
+
+        .modal-body li {
+            margin-bottom: 8px;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            text-align: right;
+        }
+
+        .btn-close-modal {
+            background: var(--accent-pink);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-close-modal:hover {
+            background: #e62958;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div class="login-card">
+        <div class="brand-text">JANET'S QUALITY<br><span style="color: var(--accent-pink);">CATERING</span></div>
+
+        <div class="theme-switcher">
+            <button class="theme-btn" onclick="setTheme('dark')" id="darkBtn"><i class="bi bi-moon-fill"></i></button>
+            <button class="theme-btn" onclick="setTheme('light')" id="lightBtn"><i class="bi bi-sun-fill"></i></button>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="{{ 'success-msg' if category == 'success' or category == 'info' else 'error-msg' }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <div class="password-container">
+                    <input type="password" name="password" id="passwordField" class="form-control" placeholder="Enter password" required>
+                    <i class="bi bi-eye-slash toggle-password" id="toggleIcon"></i>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Verify Captcha</label>
+                <div class="captcha-box">{{ captcha }}</div>
+                <input type="text" name="captcha_input" class="form-control" placeholder="Type the code above" required>
+            </div>
+
+            <div class="mb-4 form-check">
+                <input type="checkbox" name="terms" class="form-check-input" id="termsCheck" required>
+                <label class="form-check-label" for="termsCheck" style="font-size: 0.8rem;">
+                    I agree to the <a href="#" id="termsLink" class="terms-link">Terms and Conditions</a>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-magenta">Login</button>
+        </form>
+    </div>
+
+    <!-- TERMS AND CONDITIONS MODAL -->
+    <div class="modal-overlay" id="termsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Terms and Conditions</h2>
+                <button class="modal-close" id="modalCloseBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3>1. Acceptance of Terms</h3>
+                <p>By accessing and using Janet's Quality Catering inventory and event management system, you accept and agree to be bound by the terms and provision of this agreement.</p>
+
+                <h3>2. Use License</h3>
+                <p>Permission is granted to temporarily download one copy of the materials (information or software) on Janet's Quality Catering website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
+                <ul>
+                    <li>Modifying or copying the materials</li>
+                    <li>Using the materials for any commercial purpose or for any public display</li>
+                    <li>Attempting to decompile or reverse engineer any software contained on the website</li>
+                    <li>Removing any copyright or other proprietary notations from the materials</li>
+                    <li>Transferring the materials to another person or "mirroring" the materials on any other server</li>
+                </ul>
+
+                <h3>3. Disclaimer</h3>
+                <p>The materials on Janet's Quality Catering website are provided "as is". We make no warranties, expressed or implied, and hereby disclaim and negate all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.</p>
+
+                <h3>4. Limitations</h3>
+                <p>In no event shall Janet's Quality Catering or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on the website.</p>
+
+                <h3>5. Accuracy of Materials</h3>
+                <p>The materials appearing on Janet's Quality Catering website could include technical, typographical, or photographic errors. We do not warrant that any of the materials on the website are accurate, complete, or current. We may make changes to the materials contained on the website at any time without notice.</p>
+
+                <h3>6. Links</h3>
+                <p>We have not reviewed all of the sites linked to our website and are not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by us of the site. Use of any such linked website is at the user's own risk.</p>
+
+                <h3>7. Modifications</h3>
+                <p>We may revise these terms of service for the website at any time without notice. By using the website, you are agreeing to be bound by the then current version of these terms of service.</p>
+
+                <h3>8. Governing Law</h3>
+                <p>These terms and conditions are governed by and construed in accordance with the laws of the Philippines, and you irrevocably submit to the exclusive jurisdiction of the courts in that location.</p>
+
+                <h3>9. Data Protection</h3>
+                <p>We are committed to protecting your personal information. All data entered into this system is secured and used solely for inventory and event management purposes.</p>
+
+                <h3>10. Contact Information</h3>
+                <p>If you have any questions about these Terms and Conditions, please contact Janet's Quality Catering through the provided contact information.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-close-modal" id="modalAcceptBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- THEME SWITCHER LOGIC ---
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            const darkBtn = document.getElementById('darkBtn');
+            const lightBtn = document.getElementById('lightBtn');
+            if(darkBtn) darkBtn.classList.remove('active');
+            if(lightBtn) lightBtn.classList.remove('active');
+            if(theme === 'dark' && darkBtn) darkBtn.classList.add('active');
+            else if(lightBtn) lightBtn.classList.add('active');
+        }
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        setTheme(savedTheme);
+
+        const passwordField = document.querySelector('#passwordField');
+        const toggleIcon = document.querySelector('#toggleIcon');
+        const termsLink = document.querySelector('#termsLink');
+        const termsModal = document.querySelector('#termsModal');
+        const modalCloseBtn = document.querySelector('#modalCloseBtn');
+        const modalAcceptBtn = document.querySelector('#modalAcceptBtn');
+
+        // Password toggle functionality
+        toggleIcon.addEventListener('click', function () {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.classList.toggle('bi-eye');
+            this.classList.toggle('bi-eye-slash');
+        });
+
+        // Terms and Conditions modal functionality
+        termsLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            termsModal.classList.add('active');
+        });
+
+        modalCloseBtn.addEventListener('click', function () {
+            termsModal.classList.remove('active');
+        });
+
+        modalAcceptBtn.addEventListener('click', function () {
+            termsModal.classList.remove('active');
+        });
+
+        // Close modal when clicking outside
+        termsModal.addEventListener('click', function (e) {
+            if (e.target === termsModal) {
+                termsModal.classList.remove('active');
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && termsModal.classList.contains('active')) {
+                termsModal.classList.remove('active');
+            }
+        });
+    </script>
+
+</body>
+</html>

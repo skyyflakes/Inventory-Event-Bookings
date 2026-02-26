@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backdrops Gallery | Janet's Catering</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-body: #0a0b10;
+            --card-color: #1a1d29;
+            --accent-pink: #ff2e63;
+            --text-main: #ffffff;
+            --text-muted: #8e92a4;
+            --border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f4f7fe;
+            --card-color: #ffffff;
+            --text-main: #1a1d2f;
+            --text-muted: #64748b;
+            --border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body { 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            padding: 40px; 
+            overflow-x: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Search Bar Styling */
+        .search-container {
+            max-width: 500px;
+            margin: 30px auto;
+        }
+        .search-input {
+            background: var(--card-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 15px 25px;
+            border-radius: 50px;
+            width: 100%;
+            transition: background 0.3s, color 0.3s, border-color 0.3s;
+        }
+        [data-theme="light"] .search-input { background: #ffffff; border-color: #ced4da; }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-pink);
+            box-shadow: 0 0 15px rgba(255, 46, 99, 0.3);
+        }
+        .search-input::placeholder { color: var(--text-muted); }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        /* Backdrop Card Animation */
+        .backdrop-card {
+            background: var(--card-color);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            animation: slideUp 0.6s ease backwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .backdrop-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-pink);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+
+        .img-container {
+            height: 220px;
+            background: #000;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.6s;
+        }
+
+        .backdrop-card:hover img {
+            transform: scale(1.15) rotate(2deg);
+            opacity: 0.8;
+        }
+
+        .backdrop-label {
+            padding: 15px;
+            background: var(--card-color);
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-magenta { 
+            background: var(--accent-pink); 
+            color: white; 
+            border-radius: 10px; 
+            padding: 8px 16px; 
+            border: none; 
+            font-weight: 700; 
+            transition: 0.3s;
+            width: 100%;
+            font-size: 0.8rem;
+        }
+        .btn-magenta:hover { opacity: 0.9; color: white; }
+
+        /* FULLSCREEN MODAL (Lightbox) */
+        #lightbox {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10000;
+            backdrop-filter: blur(15px);
+        }
+
+        #lightbox.show {
+            display: flex;
+        }
+
+        #lightbox img {
+            max-width: 90%;
+            max-height: 75vh;
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        #lightbox .title-overlay {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent-pink);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 30px; right: 40px;
+            font-size: 40px; color: white; cursor: pointer;
+            transition: 0.3s;
+            background: none;
+            border: none;
+        }
+        .close-btn:hover { color: var(--accent-pink); transform: rotate(90deg); }
+
+        .btn-back {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .btn-back:hover { background: rgba(255,255,255,0.15); color: white; }
+
+        /* Flash Messages */
+        .flash-success {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Light mode card overrides */
+        [data-theme="light"] .backdrop-card { box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        [data-theme="light"] .backdrop-card:hover { box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+        [data-theme="light"] .btn-back { background: rgba(0,0,0,0.06); color: #1a1d2f; }
+        [data-theme="light"] .btn-back:hover { background: rgba(0,0,0,0.1); color: #1a1d2f; }
+
+        /* Theme Switcher */
+        .theme-switcher {
+            background: rgba(128, 128, 128, 0.1); border-radius: 10px;
+            display: flex; justify-content: center; gap: 10px; padding: 5px; margin-bottom: 20px;
+            max-width: 200px;
+        }
+        .theme-btn { border: none; background: transparent; color: var(--text-muted); padding: 8px 15px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .theme-btn.active { background: var(--accent-pink); color: white; }
+    </style>
+</head>
+<body data-theme="dark">
+
+<!-- FIX: Idinagdag ang lightbox HTML elements na hindi nakalagay sa original -->
+<div id="lightbox">
+    <button class="close-btn" onclick="closeLightbox()">&times;</button>
+    <img id="fullSizeImg" src="" alt="Full Size Backdrop">
+    <div class="title-overlay" id="fullSizeTitle"></div>
+</div>
+
+<div class="container mt-4">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <h2 style="font-weight: 800;">Choose a Backdrop</h2>
+            <div class="theme-switcher">
+                <button class="theme-btn" onclick="setTheme('dark')" id="darkBtn"><i class="fas fa-moon"></i></button>
+                <button class="theme-btn" onclick="setTheme('light')" id="lightBtn"><i class="fas fa-sun"></i></button>
+            </div>
+        </div>
+        <a href="{{ url_for('dashboard') }}" class="btn-back">
+            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <!-- FIX: Idinagdag ang search input na hinahanap ng filterGallery() function -->
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search backdrops..." oninput="filterGallery()">
+    </div>
+
+    <div class="gallery-grid">
+        {% for i in range(1, 71) %}
+        <div class="backdrop-card" data-title="Backdrop {{ i }}" style="animation-delay: {{ (i % 20) * 0.05 }}s">
+            <div class="img-container" onclick="viewImage('{{ url_for('static', filename='images/photo' + i|string + '.jpg') }}', 'Backdrop {{ i }}')">
+                <!-- FIX: Inayos ang image path mula sa 'images/photo1-photo70' + i -> 'images/photo' + i -->
+                <img src="{{ url_for('static', filename='images/photo' + i|string + '.jpg') }}" 
+                    alt="Backdrop {{ i }}"
+                    onerror="this.src='https://via.placeholder.com/200x220/1a1d29/8e92a4?text=Photo+{{ i }}'">
+            </div>
+            <div class="backdrop-label">Backdrop {{ i }}</div>
+            <div style="padding: 0 15px 15px;">
+                <form action="{{ url_for('select_backdrop') }}" method="POST">
+                    <input type="hidden" name="photo_name" value="photo{{ i }}.jpg">
+                    <button type="submit" class="btn-magenta">Select Backdrop</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    // --- THEME SWITCHER LOGIC ---
+    function setTheme(theme) {
+        document.body.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        const darkBtn = document.getElementById('darkBtn');
+        const lightBtn = document.getElementById('lightBtn');
+        if(darkBtn) darkBtn.classList.remove('active');
+        if(lightBtn) lightBtn.classList.remove('active');
+        if(theme === 'dark' && darkBtn) darkBtn.classList.add('active');
+        else if(lightBtn) lightBtn.classList.add('active');
+    }
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    // Fullsize Viewer Logic
+    function viewImage(src, title) {
+        const lightbox = document.getElementById('lightbox');
+        const img = document.getElementById('fullSizeImg');
+        const txt = document.getElementById('fullSizeTitle');
+        
+        img.src = src;
+        txt.innerText = title;
+        lightbox.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('show');
+        document.body.style.overflow = 'auto';
+    }
+
+    // FIX: Search Filter Logic - gumagamit ng proper class at data-title attribute
+    function filterGallery() {
+        let input = document.getElementById('searchInput').value.toLowerCase();
+        let cards = document.getElementsByClassName('backdrop-card');
+
+        for (let i = 0; i < cards.length; i++) {
+            let title = cards[i].getAttribute('data-title').toLowerCase();
+            if (title.includes(input)) {
+                cards[i].style.display = "";
+            } else {
+                cards[i].style.display = "none";
+            }
+        }
+    }
+
+    // Close on ESC key
+    window.addEventListener('keydown', (e) => {
+        if(e.key === "Escape") closeLightbox();
+    });
+
+    // Close on clicking outside the image
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+        if(e.target === this) closeLightbox();
+    });
+</script>
+
+</body>
+</html>

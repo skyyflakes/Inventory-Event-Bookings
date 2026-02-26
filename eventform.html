@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Book New Event | Janet's Catering</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-body: #0a0b10;
+            --card-color: #1a1d29;
+            --accent-pink: #ff2e63;
+            --text-main: #ffffff;
+            --text-muted: #8e92a4;
+            --border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f4f7fe;
+            --card-color: #ffffff;
+            --text-main: #1a1d2f;
+            --text-muted: #64748b;
+            --border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body { 
+            background: var(--bg-body); 
+            color: var(--text-main); 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            padding: 50px; 
+            transition: background 0.3s, color 0.3s;
+        }
+        .booking-card { 
+            background: var(--card-color); 
+            padding: 40px; 
+            border-radius: 20px; 
+            border: 1px solid var(--border-color); 
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        [data-theme="light"] .booking-card { box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        [data-theme="light"] .btn-exit { background: rgba(0,0,0,0.06); color: #1a1d2f; }
+        [data-theme="light"] .btn-exit:hover { background: rgba(0,0,0,0.1); color: #1a1d2f; }
+
+        /* Theme Switcher */
+        .theme-switcher {
+            background: rgba(128, 128, 128, 0.1); border-radius: 10px;
+            display: flex; justify-content: center; gap: 10px; padding: 5px; margin-bottom: 20px;
+            max-width: 200px; margin-left: auto; margin-right: auto;
+        }
+        .theme-btn { border: none; background: transparent; color: var(--text-muted); padding: 8px 15px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .theme-btn.active { background: var(--accent-pink); color: white; }
+        .form-control, .form-select { 
+            background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            color: var(--text-main) !important; 
+            border-radius: 12px;
+            padding: 12px;
+            transition: background 0.3s, color 0.3s, border-color 0.3s;
+        }
+        [data-theme="light"] .form-control, [data-theme="light"] .form-select { background: #ffffff; border-color: #ced4da; color: #1a1d2f !important; }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-pink);
+            box-shadow: 0 0 10px rgba(255, 46, 99, 0.2);
+            background: rgba(255,255,255,0.08);
+        }
+        .form-control::placeholder { color: var(--text-muted); }
+        textarea.form-control { min-height: 80px; }
+        .btn-save { 
+            background: var(--accent-pink); 
+            color: white; 
+            width: 100%; 
+            font-weight: 800; 
+            padding: 14px; 
+            border: none;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn-save:hover { background: #e62958; transform: translateY(-2px); color: white; }
+        .btn-exit { 
+            background: rgba(255,255,255,0.1); 
+            color: white; 
+            width: 100%; 
+            margin-top: 10px; 
+            padding: 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-exit:hover { background: rgba(255,255,255,0.15); color: white; }
+        .backdrop-preview { max-width: 200px; border-radius: 10px; border: 2px solid var(--accent-pink); }
+        .section-title {
+            color: var(--accent-pink);
+            font-weight: 800;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-left: 4px solid var(--accent-pink);
+            padding-left: 12px;
+            margin-bottom: 15px;
+        }
+        .form-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+        /* Flash Messages */
+        .flash-success {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .flash-danger {
+            background: rgba(255, 46, 99, 0.1);
+            color: var(--accent-pink);
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="container">
+        <div class="booking-card">
+            <h2 class="mb-4 text-center" style="font-weight: 800;">EVENT BOOKING FORM</h2>
+
+            <div class="theme-switcher">
+                <button class="theme-btn" onclick="setTheme('dark')" id="darkBtn"><i class="fas fa-moon"></i></button>
+                <button class="theme-btn" onclick="setTheme('light')" id="lightBtn"><i class="fas fa-sun"></i></button>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <form action="{{ url_for('event_booking') }}" method="POST" id="bookingForm">
+                
+                <h5 class="section-title">Customer Information</h5>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="fullname" class="form-control" placeholder="Full Name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Contact Number</label>
+                        <input type="text" name="contact" class="form-control" placeholder="Contact Number" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Home Address</label>
+                        <input type="text" name="customer_address" class="form-control" placeholder="Your Home Address" required>
+                    </div>
+                </div>
+
+                <h5 class="section-title">Event Details</h5>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label">Type of Event</label>
+                        <input type="text" name="event_type" class="form-control" placeholder="e.g. Wedding, Birthday" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Event Date</label>
+                        <input type="date" name="event_date" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Number of Pax</label>
+                        <input type="number" name="pax" class="form-control" min="50" placeholder="Min 50" required>
+                    </div>
+                </div>
+
+                <h5 class="section-title">Venue Address</h5>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label">Province</label>
+                        <input type="text" name="province" class="form-control" placeholder="Province" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">City</label>
+                        <input type="text" name="city" class="form-control" placeholder="City" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Barangay</label>
+                        <input type="text" name="barangay" class="form-control" placeholder="Barangay" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Full Venue Details</label>
+                        <textarea name="venue_address" class="form-control" placeholder="Full Venue Details (e.g. Street, Landmark, etc.)" required></textarea>
+                    </div>
+                </div>
+
+                <h5 class="section-title">Selected Backdrop</h5>
+                <div class="mb-4">
+                    {% if selected_backdrop %}
+                        <p>You selected: <strong style="color: var(--accent-pink);">{{ selected_backdrop }}</strong></p>
+                        <img src="{{ url_for('static', filename='backdrops/' + selected_backdrop) }}" class="backdrop-preview" alt="Selected Backdrop" onerror="this.style.display='none'">
+                        <input type="hidden" name="backdrop_name" value="{{ selected_backdrop }}">
+                    {% else %}
+                        <p style="color: var(--text-muted);">No backdrop selected. <a href="{{ url_for('backdrops_page') }}" style="color: var(--accent-pink); font-weight: 700;">Select here</a></p>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-save">
+                    <i class="fas fa-save me-2"></i>SAVE BOOKING
+                </button>
+                <a href="{{ url_for('event_list') }}" class="btn-exit">
+                    <i class="fas fa-times me-2"></i>EXIT WITHOUT SAVING
+                </a>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- THEME SWITCHER LOGIC ---
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            const darkBtn = document.getElementById('darkBtn');
+            const lightBtn = document.getElementById('lightBtn');
+            if(darkBtn) darkBtn.classList.remove('active');
+            if(lightBtn) lightBtn.classList.remove('active');
+            if(theme === 'dark' && darkBtn) darkBtn.classList.add('active');
+            else if(lightBtn) lightBtn.classList.add('active');
+        }
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        setTheme(savedTheme);
+    </script>
+</body>
+</html>
